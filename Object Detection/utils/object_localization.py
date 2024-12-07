@@ -76,7 +76,7 @@ def object_localization(img_path, model):
     return cropped_struk
 
 def ocr_receipt(img_path, model):
-    cropped_image = object_localization(test_path, model)
+    cropped_image = object_localization(img_path, model)
     options = "--psm 6"
     extracted_text = pytesseract.image_to_string(
         cv.cvtColor(cropped_image, cv.COLOR_BGR2RGB), config=options)
