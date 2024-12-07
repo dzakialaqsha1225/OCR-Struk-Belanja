@@ -15,12 +15,7 @@ def object_localization(img_path, model):
     Returns:
         numpy.ndarray: The cropped image containing the localized object.
     """
-    # Input validation
-    if not isinstance(img, np.ndarray):
-        raise TypeError("Input image must be a NumPy array.")
-    if not isinstance(model, tf.keras.Model):
-        raise TypeError("Input model must be a TensorFlow Keras model.")
-
+    
     # MAIN CODE #
     input_size = 244
 
