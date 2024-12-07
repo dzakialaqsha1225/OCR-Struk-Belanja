@@ -19,13 +19,15 @@ def object_localization(img_path, model):
     # MAIN CODE #
     input_size = 244
 
-    # Load the image directly using cv.imread
+    # Load the image
     img = cv.imread(img_path)  
-    # Convert to RGB
-    img = cv.cvtColor(img, cv.IMREAD_GRAYSCALE) #convert to grayscale
-    
+
+    # Convert to RGB if not grayscale
+    if len(img.shape) == 3:  # Check if image has 3 channels (color)
+        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)  # Convert to grayscale
+
     #preprocess the image
-    height, width = img.shape 
+    height, width = img.shape
     max_size = max(height, width)
     r = max_size / input_size
     new_width = int(width / r)
