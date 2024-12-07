@@ -4,16 +4,16 @@ import cv2 as cv
 
 from matplotlib import pyplot as plt
 
-def object_localization(img: np.ndarray, model: tf.keras.Model)-> np.ndarray:
+def object_localization(img_path, model):
     """
-    Performs object localization for receipts on an image using a given model.
+    Localizes the object of interest (receipt) in an image.
 
     Args:
-        img: A NumPy array representing the image.
-        model: A TensorFlow Keras model for object localization.
+        img_path (str): Path to the image file.
+        model (tf.keras.Model): The object detection model.
 
     Returns:
-        A NumPy array representing the localized objects.
+        numpy.ndarray: The cropped image containing the localized object.
     """
     # Input validation
     if not isinstance(img, np.ndarray):
@@ -23,8 +23,11 @@ def object_localization(img: np.ndarray, model: tf.keras.Model)-> np.ndarray:
 
     # MAIN CODE #
     input_size = 244
-    #open url and read the image
-    img = cv.imdecode(img, cv.IMREAD_GRAYSCALE) #convert to grayscale
+
+    # Load the image directly using cv.imread
+    img = cv.imread(img_path)  
+    # Convert to RGB
+    img = cv.cvtColor(img, cv.IMREAD_GRAYSCALE) #convert to grayscale
     
     #preprocess the image
     height, width = img.shape 
