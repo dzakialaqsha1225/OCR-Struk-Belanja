@@ -1,6 +1,7 @@
 import tensorflow as tf #tensorflow ver 2.18.0
 import numpy as np
 import cv2 as cv
+import pytesseract
 
 from matplotlib import pyplot as plt
 
@@ -74,3 +75,9 @@ def object_localization(img_path, model):
     
     return cropped_struk
 
+def ocr_receipt(img_path, model):
+    cropped_image = object_localization(test_path, model)
+    options = "--psm 6"
+    extracted_text = pytesseract.image_to_string(
+        cv.cvtColor(cropped_image, cv.COLOR_BGR2RGB), config=options)
+    return extracted_text
