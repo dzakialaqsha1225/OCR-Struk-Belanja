@@ -5,6 +5,11 @@ from collections import Counter
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+"""
+Implementation Reference:
+https://medium.com/datafabrica/mastering-e-commerce-product-recommendations-in-python-7c12a4bf0c2c
+"""
+
 
 def generate_recommendations(target_customer: str, cohort, num_recommendations=8):
       """
