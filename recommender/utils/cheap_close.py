@@ -118,4 +118,4 @@ def cheap_proximity_rec(dataset: str, uid: str, product_list: list[str], lon: fl
   temp_df = temp_df.sort_values(by=['distance', 'purchase_date', 'purchase_price',], ascending=[True,False,True])
   temp_df = temp_df.drop(['uid', 'email', 'age', 'quantity'], axis=1)
 
-  print(temp_df.head())
+  return temp_df
