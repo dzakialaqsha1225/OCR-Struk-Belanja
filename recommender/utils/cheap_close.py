@@ -53,7 +53,8 @@ def cheap_proximity_rec(dataset: str, uid: str, product_list: list[str], lon: fl
       lat : latitude of user.
 
   Returns:
-      list: a list of recommended product with cheaper price and in closer proximity to user.
+      temp_df: a data frame of lately purchased product by user, and recommended based on similarity to user, sorted by the shortest distance (in kilometers), 
+      latest date (up-to-date price), at the cheapest price.
   """
 
   df = pd.read_csv(dataset)
