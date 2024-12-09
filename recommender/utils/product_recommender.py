@@ -6,7 +6,16 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-def generate_recommendations(target_customer, cohort, num_recommendations=5):
+def generate_recommendations(target_customer: str, cohort, num_recommendations=8):
+      """
+      returns recommendation for other products to be purchased using rfmTable, based on a cohort of customers with purchase history set as a reference
+      Args:
+            target_customer : Path to a (.csv) purchase_history file.
+            cohort : a pd dataframe with relevant purchase_history in the format provided in the repository
+        Returns:
+            list: a list of recommended product names in an order.
+
+      """
       user_item_matrix = cohort.groupby('uid')['product_name'].apply(lambda x: ', '.join(x)).reset_index()
       user_item_matrix['product_type'] = cohort.groupby('uid')['product_type'].apply(lambda x: ', '.join(x)).reset_index()['product_type']
       tfidf = TfidfVectorizer()
@@ -90,7 +99,7 @@ def recommend(dataset: str, uid: str):
   
   premium = list(set(rfmTable.index))[:len(rfmTable['customer_segment'])]
   df_premium = df[df['uid'].isin(premium)]
-  recommendations = generate_recommendations("5qnoytiyjqih5rv99mnwctq6n27t", df_premium, num_recommendations=5)
+  recommendations = generate_recommendations("5qnoytiyjqih5rv99mnwctq6n27t", df_premium, num_recommendations=8)
 
   return recommendations
   
