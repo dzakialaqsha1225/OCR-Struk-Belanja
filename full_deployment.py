@@ -5,7 +5,7 @@ import vertex_extract_dict as ved
 import product_recommender as pr
 import cheap_close as cc
 
-def full_deployment(key_path: str, test_path: str, dataset_path: string, uid: str, email: str, model, lon: float, lat: float):
+def full_deployment(key_path: str, test_path: str, dataset_path: str, uid: str, email: str, model, lon: float, lat: float):
   """
     Takes a picture of a receipt, perform object localization for the receipt, use ocr on cropped localized image,
     then generate recommended places to get similar items for cheaper and closer.
