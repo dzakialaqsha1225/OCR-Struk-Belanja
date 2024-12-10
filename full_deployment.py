@@ -1,5 +1,6 @@
 import warnings
 import pandas as pd
+import re
 import object_localization as ol
 import vertex_extract_dict as ved
 import product_recommender as pr
