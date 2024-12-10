@@ -4,7 +4,7 @@ import json
 import re
 import os
 
-def extract_dict(receipt_ocr: string):
+def extract_dict(receipt_ocr: str):
     """
         Extract relevant informations parsed from an ocr of a receipt into a structured dictionary
 
