@@ -29,7 +29,7 @@ def full_deployment(key_path: str, test_path: str, dataset_path: string, uid: st
   df = pd.read_csv(dataset_path)
   
   if df.empty:
-  raise ValueError("DataFrame is empty. Please check the dataset file in the provided path.")
+    raise ValueError("DataFrame is empty. Please check the dataset file in the provided path.")
   if 'uid' not in df.columns:
     raise ValueError("uid column is missing from the dataset")
   if re.fullmatch(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", email) is None:
