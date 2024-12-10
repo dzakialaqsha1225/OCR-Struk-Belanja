@@ -35,7 +35,7 @@ def full_deployment(key_path: str, test_path: str, dataset_path: str, uid: str, 
     raise ValueError("uid column is missing from the dataset")
   if re.fullmatch(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", email) is None:
     raise ValueError('Email is not valid')
-  if 'lon' not in df.columns:
+  if 'long' not in df.columns:
     raise ValueError("long column is missing from the dataset")
   if 'lat' not in df.columns:
     raise ValueError("lat column is missing from the dataset")
