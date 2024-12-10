@@ -8,17 +8,63 @@ import json
 import re
 import os
 
-def extract_dict(receipt_ocr: str, key_path: str):
+def geocode_address(address, credentials):
+    """
+    Geocodes a given address using the Google Maps Geocoding API and service account credentials.
+
+    Args:
+        address (str): The address to be geocoded.
+        credentials (google.oauth2.credentials.Credentials): An instance of Google service account credentials containing a valid token.
+
+    Returns:
+        tuple(float, float) or None, None: 
+            - A tuple containing the latitude and longitude if successful,
+            - None, None if geocoding fails or the request fails.
+    """
+
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+      "address": address,
+      "key": credentials.token
+    }
+
+    headers = {
+      "Authorization": f"Bearer {credentials.token}"
+    }
+    
+    response = requests.get(url, params=params, headers=headers)
+
+    if response.status_code == 200:
+      response_json = response.json()
+      if response_json['status'] == 'OK':
+        # Process the geocoding results
+        for result in response_json['results']:
+          location = result['geometry']['location']
+          return location['lat'], location['lng']
+      else:
+        print("Geocoding failed:", response_json['status'])
+        return None, None
+    else:
+      print("Request failed with status code:", response.status_code)
+      return None, None
+
+def extract_dict(receipt_ocr: str, key_path: str, uid: str, email: str):
     """
         Extract relevant informations parsed from an ocr of a receipt into a structured dictionary
 
     Args:
-        receipt_ocr (string): a string from applying OCR to a shopping receipt
-        key_path : a string to a path containing the json key for google vertex ai
-
+        receipt_ocr (string): a string from applying OCR to a shopping receipt.
+        key_path  : a string to a path containing the json key for google vertex ai.
+        uid       : user id.
+        email     : user email.
+    
     Returns:
         data: a dictionary of relevant informations, the contain is provided below in the prompt:
     """
+    if len(uid) != 28:
+      raise ValueError('UID is not 28 characters long')
+    if re.fullmatch(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", email) is None:
+      raise ValueError('Email is not valid')
 
     prompt = '''Provided below is an OCR of Indonesian shopping receipt. You will extract the relevant informations from the OCR text.
 
@@ -32,7 +78,7 @@ def extract_dict(receipt_ocr: str, key_path: str):
     Dictionary format:
     extracted_information = {
 
-    "purchase_date" : [], #(String) In ISO 8601 format, just one value in this key
+    "purchase_date" : [], #(String) In ISO 8601 format, just one value in this key. If none, return todays date.
 
     "purchase_address" : [], #(String) from Indonesian address format, return both the vendor name and its address in one string, just one value in this key. Do not use escape characters.
 
@@ -95,5 +141,23 @@ def extract_dict(receipt_ocr: str, key_path: str):
         data = json.load(file)
 
     os.remove('llm_output.json')
+
+    
+    data['uid'] = [uid]
+    data['email'] = [email]
+    data['quantity'] = [1]
+
+    #get long lat
+    lat, long = geocode_address(data['purchase_address'][0], credentials)
+    data['long'] = [lng]
+    data['lat'] = [lat]
+
+    #duplicate dict keys with only single value to match the length of other keys
+    max_len = max(len(v) for v in data.values())
+
+    # Duplicate single-value keys to match the maximum length
+    for key, value in data.items():
+        if len(value) == 1:
+            data[key] = value * max_len
 
     return data
