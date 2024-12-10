@@ -150,7 +150,7 @@ def extract_dict(receipt_ocr: str, key_path: str, uid: str, email: str):
 
     #get long lat
     lat, long = geocode_address(data['purchase_address'][0], credentials)
-    data['long'] = [lng]
+    data['long'] = [long]
     data['lat'] = [lat]
 
     #duplicate dict keys with only single value to match the length of other keys
