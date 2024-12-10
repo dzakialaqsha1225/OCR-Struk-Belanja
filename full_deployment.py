@@ -26,22 +26,24 @@ def full_deployment(key_path: str, test_path: str, dataset_path: string, uid: st
       a pd dataframe sorted by distance from user's location, offering the cheapest price, at the most up-to-date
       of user's previously purchased items and recommended items based on RFM analysis
   """
-  if pd.read_csv(dataset_path).empty:
-  raise ValueError("DataFrame is empty. Please check the dataset file.")
+  df = pd.read_csv(dataset_path)
+  
+  if df.empty:
+  raise ValueError("DataFrame is empty. Please check the dataset file in the provided path.")
   if 'uid' not in df.columns:
     raise ValueError("uid column is missing from the dataset")
   if re.fullmatch(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", email) is None:
     raise ValueError('Email is not valid')
-  if 'lon' not in pd.read_csv(dataset_path).columns:
+  if 'lon' not in df.columns:
     raise ValueError("long column is missing from the dataset")
-  if 'lat' not in pd.read_csv(dataset_path).columns:
+  if 'lat' not in df.columns:
     raise ValueError("lat column is missing from the dataset")
   
   warnings.simplefilter(action='ignore', category=FutureWarning)
   struk = ol.ocr_receipt(test_path, model) #uses util
   data = ved.extract_dict(struk, key_path, uid, email) #uses util
   data = pd.DataFrame(data)
-  df = pd.read_csv('/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv')
+
   df = pd.concat([df, data], ignore_index=True)
   df.to_csv('/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv', index=False)
   test_rec = pr.recommend("/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv", uid) #uses util
