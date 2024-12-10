@@ -25,13 +25,13 @@ def full_deployment(key_path: str, test_path: str, uid: str, email: str, model, 
       of user's previously purchased items and recommended items based on RFM analysis
   """
   warnings.simplefilter(action='ignore', category=FutureWarning)
-  struk = ol.ocr_receipt(test_path, model)
-  data = extract_dict(struk, key_path, uid, email)
+  struk = ol.ocr_receipt(test_path, model) #uses util
+  data = ed.extract_dict(struk, key_path, uid, email) #uses util
   data = pd.DataFrame(data)
   df = pd.read_csv('/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv')
   df = pd.concat([df, data], ignore_index=True)
   df.to_csv('/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv', index=False)
-  test_rec = pr.recommend("/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv", test_uid)
+  test_rec = pr.recommend("/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv", test_uid) #uses util
   end_rec = cc.cheap_proximity_rec(
     dataset = "/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv",
     uid = test_uid,
