@@ -1,4 +1,8 @@
 import warnings
+import object_localization as ol
+import vertex_extract_dict as ved
+import product_recommender as pr
+import cheap_close as cc
 
 def full_deployment(key_path: str, test_path: str, uid: str, email: str, model, lon: float, lat: float):
   """
