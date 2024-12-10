@@ -41,15 +41,25 @@ def full_deployment(key_path: str, test_path: str, dataset_path: str, uid: str, 
     raise ValueError("lat column is missing from the dataset")
   
   warnings.simplefilter(action='ignore', category=FutureWarning)
-  struk = ol.ocr_receipt(test_path, model) #uses util
-  data = ved.extract_dict(struk, key_path, uid, email) #uses util
-  data = pd.DataFrame(data)
+  # Retry logic with exception handling
+  max_retries = 3  
+  for attempt in range(max_retries + 1):
+    try:
+      struk = ol.ocr_receipt(test_path, model)  # uses util
+      data = ved.extract_dict(struk, key_path, uid, email)  # uses util
+      data = pd.DataFrame(data)
+      break  # Successful processing, exit the loop
+    except json.JSONDecodeError as e:
+      if attempt == max_retries:
+        raise  # Re-raise on the last attempt to signal unrecoverable error
+      else:
+        print(f"JSONDecodeError encountered on attempt {attempt+1}. Retrying...")
 
   df = pd.concat([df, data], ignore_index=True)
   df.to_csv('/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv', index=False)
   test_rec = pr.recommend("/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv", uid) #uses util
   end_rec = cc.cheap_proximity_rec(
     dataset = "/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv",
-    uid = test_uid,
+    uid = uid,
     product_list = test_rec, lon = lon, lat = lat)
   return end_rec
