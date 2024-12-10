@@ -1,15 +1,20 @@
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel
+
+from google.auth.transport.requests import Request
+from google.oauth2.service_account import Credentials
+
 import json
 import re
 import os
 
-def extract_dict(receipt_ocr: str):
+def extract_dict(receipt_ocr: str, key_path: str):
     """
         Extract relevant informations parsed from an ocr of a receipt into a structured dictionary
 
     Args:
         receipt_ocr (string): a string from applying OCR to a shopping receipt
+        key_path : a string to a path containing the json key for google vertex ai
 
     Returns:
         data: a dictionary of relevant informations, the contain is provided below in the prompt:
@@ -52,14 +57,27 @@ def extract_dict(receipt_ocr: str):
     OCR text:
 
     '''
-    
-    prompt = prompt + receipt_ocr
+    '''
+    Initializing Google Vertex AI
+    '''
+    credentials = Credentials.from_service_account_file(
+        key_path,
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
 
-    prompt = prompt.replace("\'", '')
+    if credentials.expired:
+      credentials.refresh(Request())
 
     PROJECT_ID = "capstone-bangkit-d0ca4"
     REGION = "us-central1"
-    vertexai.init(project=PROJECT_ID, location=REGION)
+    vertexai.init(project=PROJECT_ID, location=REGION, credentials = credentials)
+
+    '''
+    Configuring the prompt
+    '''
+    prompt = prompt + receipt_ocr
+
+    prompt = prompt.replace("\'", '')
 
     generative_multimodal_model = GenerativeModel("gemini-1.5-pro-002")
     response = generative_multimodal_model.generate_content([prompt])
