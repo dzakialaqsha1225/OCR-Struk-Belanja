@@ -4,6 +4,7 @@ from vertexai.preview.generative_models import GenerativeModel
 from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
 
+import requests
 import json
 import re
 import os
