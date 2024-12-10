@@ -26,7 +26,7 @@ def full_deployment(key_path: str, test_path: str, uid: str, email: str, model, 
   """
   warnings.simplefilter(action='ignore', category=FutureWarning)
   struk = ol.ocr_receipt(test_path, model) #uses util
-  data = ed.extract_dict(struk, key_path, uid, email) #uses util
+  data = ved.extract_dict(struk, key_path, uid, email) #uses util
   data = pd.DataFrame(data)
   df = pd.read_csv('/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv')
   df = pd.concat([df, data], ignore_index=True)
