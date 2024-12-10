@@ -32,7 +32,7 @@ def full_deployment(key_path: str, test_path: str, uid: str, email: str, model, 
   df = pd.read_csv('/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv')
   df = pd.concat([df, data], ignore_index=True)
   df.to_csv('/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv', index=False)
-  test_rec = pr.recommend("/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv", test_uid) #uses util
+  test_rec = pr.recommend("/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv", uid) #uses util
   end_rec = cc.cheap_proximity_rec(
     dataset = "/content/OCR-Struk-Belanja/recommender/dataset/purchase_history.csv",
     uid = test_uid,
