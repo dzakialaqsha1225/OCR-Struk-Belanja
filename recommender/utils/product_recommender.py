@@ -87,9 +87,8 @@ def recommend(dataset: str, uid: str):
   """
   
   #df['purchase_date'] = df['purchase_date'].apply(replace_invalid_date)
-  df['purchase_date'] = pd.to_datetime(df['purchase_date'], format='%Y-%m-%d',errors='coerce')
-  #df['purchase_date'] = pd.to_datetime(df['purchase_date'], format='mixed', infer_datetime_format=True, errors = 'coerce')
   #df['purchase_date'] = pd.to_datetime(df['purchase_date'], format='%Y-%m-%d')
+  df['purchase_date'] = pd.to_datetime(df['purchase_date'])
   NOW = df['purchase_date'].max(skipna=True)
   rfmTable = df.groupby('uid').agg({'purchase_date': lambda x: (NOW - x.max()).days, 'product_name': lambda x: len(x), 'purchase_price': lambda x: x.sum()})
   rfmTable['purchase_date'] = rfmTable['purchase_date'].astype(int)
