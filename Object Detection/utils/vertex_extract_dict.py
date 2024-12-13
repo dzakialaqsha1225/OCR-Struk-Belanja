@@ -79,7 +79,7 @@ def extract_dict(receipt_ocr: str, key_path: str, uid: str, email: str):
     Dictionary format:
     extracted_information = {
 
-    "purchase_date" : [], #(String) In ISO 8601 format, just one value in this key. If none, return todays date.
+    "purchase_date" : [], #(String) strictly in YYYY-MM-DD format, do not include time. Just one value in this key. If none, return todays date.
 
     "purchase_address" : [], #(String) from Indonesian address format, return both the vendor name and its address in one string, just one value in this key. Do not use escape characters.
 
