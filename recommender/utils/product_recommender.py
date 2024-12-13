@@ -38,7 +38,7 @@ def generate_recommendations(target_customer: str, cohort, num_recommendations=8
 
 def replace_invalid_date(date_str):
       try:
-            date_str = pd.to_datetime(date_str, format='%Y-%M-%d)
+            date_str = pd.to_datetime(date_str, format='%Y-%M-%d')
             return date_str
       except ValueError:
             date_str = datetime.today().strftime('%Y-%m-%d')
