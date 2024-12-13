@@ -4,6 +4,7 @@ from datetime import datetime
 from collections import Counter 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import re
 
 """
 Implementation Reference:
@@ -59,7 +60,7 @@ def recommend(dataset: str, uid: str):
   """
 
   df = pd.read_csv(dataset)
-
+  df['purchase_date'].str.extract(r'(\d{4}-\d{2}-\d{2})')
   """
   Initialization check
   """
@@ -86,9 +87,9 @@ def recommend(dataset: str, uid: str):
   Recency, Frequency and Monetary Recommendation
   """
   
-  df['purchase_date'] = df['purchase_date'].apply(replace_invalid_date)
-  #df['purchase_date'] = pd.to_datetime(df['purchase_date'], format='%Y-%m-%d')
-  df['purchase_date'] = pd.to_datetime(df['purchase_date'], format = 'mixed', errors = 'coerce').dt.date
+  #df['purchase_date'] = df['purchase_date'].apply(replace_invalid_date)
+  df['purchase_date'] = pd.to_datetime(df['purchase_date'], format='%Y-%m-%d')
+  #df['purchase_date'] = pd.to_datetime(df['purchase_date'], format = 'mixed', errors = 'coerce').dt.date
   NOW = df['purchase_date'].max(skipna=True)
   rfmTable = df.groupby('uid').agg({'purchase_date': lambda x: (NOW - x.max()).days, 'product_name': lambda x: len(x), 'purchase_price': lambda x: x.sum()})
   rfmTable['purchase_date'] = rfmTable['purchase_date'].astype(int)
