@@ -60,7 +60,7 @@ def recommend(dataset: str, uid: str):
   """
 
   df = pd.read_csv(dataset)
-  df['purchase_date'].str.extract(r'(\d{4}-\d{2}-\d{2})')
+  df['purchase_date'] = df['purchase_date'].str.extract(r'(\d{4}-\d{2}-\d{2})')
   """
   Initialization check
   """
