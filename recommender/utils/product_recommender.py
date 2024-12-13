@@ -36,8 +36,13 @@ def generate_recommendations(target_customer: str, cohort, num_recommendations=8
           recommendations.extend(new_items)
       return list(set(recommendations))[:num_recommendations]
 
-
-
+def replace_invalid_date(date_str):
+      try:
+            date_str = pd.to_datetime(date_str, format='%Y-%M-%d)
+            return date_str
+      except ValueError:
+            date_str = datetime.today().strftime('%Y-%m-%d')
+            return date_str
 
 def recommend(dataset: str, uid: str):
   """
@@ -78,7 +83,8 @@ def recommend(dataset: str, uid: str):
   """
   Recency, Frequency and Monetary Recommendation
   """
-  df['purchase_date'] = pd.to_datetime(df['purchase_date'], format='%Y-%m-%d')
+  #df['purchase_date'] = pd.to_datetime(df['purchase_date'], format='%Y-%m-%d')
+  df['purchase_date'] = df['purchase_date'].apply(replace_invalid_date)
   NOW = df['purchase_date'].max()
   rfmTable = df.groupby('uid').agg({'purchase_date': lambda x: (NOW - x.max()).days, 'product_name': lambda x: len(x), 'purchase_price': lambda x: x.sum()})
   rfmTable['purchase_date'] = rfmTable['purchase_date'].astype(int)
